@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -6,7 +9,7 @@ using Microsoft.AspNet.Mvc;
 namespace Zuehlke.AppMonitor.Server.Api.Controllers
 {
     [Route("api/[controller]")]
-    public class ProjectController : Controller
+    public class EnvironmentsController : Controller
     {
         // GET: api/values
         [HttpGet]

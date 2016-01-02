@@ -3,7 +3,6 @@
   "compilationOptions": {
     "emitEntryPoint": true
   },
-
   "dependencies": {
     "AutoMapper": "4.1.1",
     "Microsoft.AspNet.IISPlatformHandler": "1.0.0-rc1-final",
@@ -17,18 +16,17 @@
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc1-final",
     "RavenDB.Client": "3.0.30024-Unstable"
   },
-
   "commands": {
     "web": "Microsoft.AspNet.Server.Kestrel"
   },
-
   "frameworks": {
     "dnx451": {
-      "RavenDB.Database": "3.0.30024-Unstable"
+      "dependencies": {
+        "RavenDB.Embedded" : "3.0.30027-Unstable"
+      }
     },
     "dnxcore50": { }
   },
-
   "exclude": [
     "wwwroot",
     "node_modules"

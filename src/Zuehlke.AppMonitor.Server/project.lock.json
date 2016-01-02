@@ -1371,6 +1371,35 @@
           "lib/net45/Raven.Client.Lightweight.dll": {}
         }
       },
+      "RavenDB.Database/3.0.30027-Unstable": {
+        "type": "package",
+        "dependencies": {
+          "RavenDB.Client": "[3.0.30027-Unstable]"
+        },
+        "frameworkAssemblies": [
+          "System.ComponentModel.Composition"
+        ],
+        "compile": {
+          "lib/net45/Raven.Abstractions.dll": {},
+          "lib/net45/Raven.Database.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Raven.Abstractions.dll": {},
+          "lib/net45/Raven.Database.dll": {}
+        }
+      },
+      "RavenDB.Embedded/3.0.30027-Unstable": {
+        "type": "package",
+        "dependencies": {
+          "RavenDB.Database": "[3.0.30027-Unstable]"
+        },
+        "compile": {
+          "lib/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
       "System.Collections/4.0.0": {
         "type": "package",
         "compile": {
@@ -5584,6 +5613,35 @@
           "lib/net45/Raven.Client.Lightweight.dll": {}
         }
       },
+      "RavenDB.Database/3.0.30027-Unstable": {
+        "type": "package",
+        "dependencies": {
+          "RavenDB.Client": "[3.0.30027-Unstable]"
+        },
+        "frameworkAssemblies": [
+          "System.ComponentModel.Composition"
+        ],
+        "compile": {
+          "lib/net45/Raven.Abstractions.dll": {},
+          "lib/net45/Raven.Database.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Raven.Abstractions.dll": {},
+          "lib/net45/Raven.Database.dll": {}
+        }
+      },
+      "RavenDB.Embedded/3.0.30027-Unstable": {
+        "type": "package",
+        "dependencies": {
+          "RavenDB.Database": "[3.0.30027-Unstable]"
+        },
+        "compile": {
+          "lib/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
       "System.Collections/4.0.0": {
         "type": "package",
         "compile": {
@@ -7166,6 +7224,35 @@
         "runtime": {
           "lib/net45/Raven.Abstractions.dll": {},
           "lib/net45/Raven.Client.Lightweight.dll": {}
+        }
+      },
+      "RavenDB.Database/3.0.30027-Unstable": {
+        "type": "package",
+        "dependencies": {
+          "RavenDB.Client": "[3.0.30027-Unstable]"
+        },
+        "frameworkAssemblies": [
+          "System.ComponentModel.Composition"
+        ],
+        "compile": {
+          "lib/net45/Raven.Abstractions.dll": {},
+          "lib/net45/Raven.Database.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Raven.Abstractions.dll": {},
+          "lib/net45/Raven.Database.dll": {}
+        }
+      },
+      "RavenDB.Embedded/3.0.30027-Unstable": {
+        "type": "package",
+        "dependencies": {
+          "RavenDB.Database": "[3.0.30027-Unstable]"
+        },
+        "compile": {
+          "lib/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
         }
       },
       "System.Collections/4.0.0": {
@@ -14947,6 +15034,34 @@
         "RavenDB.Client.nuspec"
       ]
     },
+    "RavenDB.Database/3.0.30027-Unstable": {
+      "type": "package",
+      "sha512": "a2q5t6mLUjJC19juCXBNzC3m6HS1u05mkImwnbstSIb0chJcj2u9uzfPaQ1IcZ3PZKlEDfaFjBXS+ka0ygY0Pw==",
+      "files": [
+        "content/Raven.Studio.Html5.zip",
+        "lib/net45/Raven.Abstractions.dll",
+        "lib/net45/Raven.Abstractions.pdb",
+        "lib/net45/Raven.Abstractions.xml",
+        "lib/net45/Raven.Database.dll",
+        "lib/net45/Raven.Database.pdb",
+        "RavenDB.Database.3.0.30027-Unstable.nupkg",
+        "RavenDB.Database.3.0.30027-Unstable.nupkg.sha512",
+        "RavenDB.Database.nuspec",
+        "readme.txt",
+        "tools/install.ps1"
+      ]
+    },
+    "RavenDB.Embedded/3.0.30027-Unstable": {
+      "type": "package",
+      "sha512": "wAHiVUuwM1IDhyiAHu2AvNuolVuuY575OsEmfmpcekdjjmqeVEnXfYznJothU4TUlkOnnHQrbGmii46QgZQllQ==",
+      "files": [
+        "lib/net45/_._",
+        "RavenDB.Embedded.3.0.30027-Unstable.nupkg",
+        "RavenDB.Embedded.3.0.30027-Unstable.nupkg.sha512",
+        "RavenDB.Embedded.nuspec",
+        "readme.txt"
+      ]
+    },
     "runtime.any.System.Reflection.DispatchProxy/4.0.1-beta-23516": {
       "type": "package",
       "serviceable": true,
@@ -19630,7 +19745,9 @@
       "Microsoft.Extensions.Logging.Debug >= 1.0.0-rc1-final",
       "RavenDB.Client >= 3.0.30024-Unstable"
     ],
-    "DNX,Version=v4.5.1": [],
+    "DNX,Version=v4.5.1": [
+      "RavenDB.Embedded >= 3.0.30027-Unstable"
+    ],
     "DNXCore,Version=v5.0": []
   }
 }

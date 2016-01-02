@@ -7,6 +7,7 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Zuehlke.AppMonitor.Server.DataAccess.Raven;
 
 namespace Zuehlke.AppMonitor.Server
 {
@@ -18,14 +19,19 @@ namespace Zuehlke.AppMonitor.Server
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables();
-            Configuration = builder.Build();
+
+            this.Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; set; }
+        public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddInstance(this.Configuration);
+
+            services.AddRavenDbDataAccess(this.Configuration);
+
             // Add framework services.
             services.AddMvc();
         }
@@ -33,12 +39,13 @@ namespace Zuehlke.AppMonitor.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             app.UseIISPlatformHandler();
 
             app.UseStaticFiles();
+            app.UseDefaultFiles();
 
             app.UseMvc();
         }

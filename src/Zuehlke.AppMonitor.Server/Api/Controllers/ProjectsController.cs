@@ -56,6 +56,11 @@ namespace Zuehlke.AppMonitor.Server.Api.Controllers
                 return this.HttpBadRequest();
             }
 
+            if (!this.ModelState.IsValid)
+            {
+                return this.HttpBadRequest();
+            }
+
             var entity = await this.dataAccess.Projects.Create(Mapper.Map<ProjectDto, Project>(item));
 
             var result = Mapper.Map<Project, ProjectDto>(entity);

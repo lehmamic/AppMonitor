@@ -59,6 +59,8 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
 
             using (IAsyncDocumentSession session = this.documentStore.OpenAsyncSession())
             {
+                project.CreatedAtUtc = DateTime.UtcNow;
+
                 await session.StoreAsync(project);
                 await session.SaveChangesAsync();
 
@@ -77,6 +79,7 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
                 }
 
                 updateItem(project);
+                project.ModifiedAtUtc = DateTime.UtcNow;
 
                 await session.SaveChangesAsync();
             }

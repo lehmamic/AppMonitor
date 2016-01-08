@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Builder;
+﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Zuehlke.AppMonitor.Server.DataAccess.Mappings;
 using Zuehlke.AppMonitor.Server.DataAccess.Raven;
+using Zuehlke.AppMonitor.Server.Utils;
 
 namespace Zuehlke.AppMonitor.Server
 {
@@ -41,6 +39,8 @@ namespace Zuehlke.AppMonitor.Server
         {
             loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseAutoMapper(c => c.AddProfile<ProjectProfile>());
 
             app.UseIISPlatformHandler();
 

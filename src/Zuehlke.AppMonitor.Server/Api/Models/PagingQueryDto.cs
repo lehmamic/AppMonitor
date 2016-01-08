@@ -1,6 +1,6 @@
 ﻿namespace Zuehlke.AppMonitor.Server.Api.Models
 {
-    public class PagingQuery
+    public class PagingQueryDto
     {
         public int Page { get; set; }
 

@@ -5,10 +5,6 @@ using Raven.Abstractions.Data;
 using Raven.Client;
 using Raven.Client.Document;
 
-#if DNX451
-using Raven.Client.Embedded;
-#endif
-
 namespace Zuehlke.AppMonitor.Server.DataAccess.Raven
 {
     public static class RavenDbDataAccessExtensions
@@ -26,7 +22,7 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven
             }
 
             serviceCollection.AddSingleton(sp => CreateDocumentStore(configuration));
-            serviceCollection.AddSingleton<IAppMonitorDataAccess, RavenDbAppMonitorDataAccess>();
+            serviceCollection.AddSingleton<IDataAccess, RavenDbDataAccess>();
 
             return serviceCollection;
         }
@@ -36,14 +32,20 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven
             var connectionString = configuration["Data:ConnectionString"];
             bool useEmbeddedStore = connectionString.Contains("DataDir") || connectionString.Contains("RunInMemory");
 
-            IDocumentStore documentStore;
 #if DNX451
-            documentStore = useEmbeddedStore ? CreateEmbeddableDocumentStore(connectionString) : CreateDocumentStore(connectionString);
+            var documentStore = useEmbeddedStore ? CreateEmbeddableDocumentStore(connectionString) : CreateDocumentStore(connectionString);
 #endif
 
 #if DNXCORE50
-            documentStore = CreateDocumentStore(connectionString);
+            if(useEmbeddedStore)
+            {
+                throw new InvalidOperationException("The emedded document store does not support the coreclr.");
+            }
+            var documentStore = CreateDocumentStore(connectionString);
 #endif
+
+            documentStore.Initialize();
+
             return documentStore;
         }
 
@@ -85,7 +87,6 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven
                 documentStore.FailoverServers = options.FailoverServers;
             }
 
-
 #if DNX451
             documentStore.EnlistInDistributedTransactions = options.EnlistInDistributedTransactions;
 #endif
@@ -100,7 +101,7 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven
             parser.Parse();
 
             var options = parser.ConnectionStringOptions;
-            var documentStore = new EmbeddableDocumentStore();
+            var documentStore = new global::Raven.Client.Embedded.EmbeddableDocumentStore();
 
             if (options.ResourceManagerId != Guid.Empty)
             {
@@ -135,6 +136,8 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven
             }
 
             documentStore.RunInMemory = options.RunInMemory;
+
+            documentStore.Configuration.Storage.Voron.AllowOn32Bits = true;
 
             return documentStore;
         }

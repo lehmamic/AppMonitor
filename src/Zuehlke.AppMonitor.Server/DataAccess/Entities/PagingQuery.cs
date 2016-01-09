@@ -1,6 +1,6 @@
 ﻿namespace Zuehlke.AppMonitor.Server.DataAccess.Entities
 {
-    public class PagingQuery
+    public class PagingQuery<T>
     {
         public int Skip { get; set; }
 

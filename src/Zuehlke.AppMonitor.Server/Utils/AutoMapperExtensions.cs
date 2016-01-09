@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Microsoft.AspNet.Builder;
+using Zuehlke.AppMonitor.Server.Utils.Projection;
 
 namespace Zuehlke.AppMonitor.Server.Utils
 {
@@ -20,6 +21,8 @@ namespace Zuehlke.AppMonitor.Server.Utils
 
             Mapper.Initialize(configure);
             Mapper.AssertConfigurationIsValid();
+
+            TypeAdapterFactory.SetCurrent(new AutoMapperTypeAdapterFactory());
 
             return app;
         }

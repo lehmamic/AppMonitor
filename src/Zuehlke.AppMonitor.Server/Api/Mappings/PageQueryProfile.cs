@@ -9,7 +9,7 @@ namespace Zuehlke.AppMonitor.Server.Api.Mappings
         #region Overrides of Profile
         protected override void Configure()
         {
-            this.CreateMap<PageQueryDto, PagingQuery>();
+            this.CreateMap(typeof(PageQueryDto<>), typeof(PagingQuery<>));
         }
         #endregion
     }

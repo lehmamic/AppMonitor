@@ -6,7 +6,7 @@ namespace Zuehlke.AppMonitor.Server.DataAccess
 {
     public interface IRepository<TEntity, in TId> where TEntity : IEntity<TId>
     {
-        Task<PageResult<TEntity>> GetList(PagingQuery query);
+        Task<PageResult<TEntity>> GetListAsync(PagingQuery<TEntity> query);
 
         Task<TEntity> Get(TId id);
 

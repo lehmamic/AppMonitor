@@ -5,12 +5,12 @@ namespace Zuehlke.AppMonitor.Server.Api.Models
 {
     public static class PagingExtensions
     {
-        public static PageQueryDto ValueOrDefault(this PageQueryDto query)
+        public static PageQueryDto<T> ValueOrDefault<T>(this PageQueryDto<T> query)
         {
-            return query ?? new PageQueryDto { Skip = 0, Top = 50 };
+            return query ?? new PageQueryDto<T> { Skip = 0, Top = 50 };
         }
 
-        public static string NextPageLink(this Controller controller, string controllerName, string routeName, PageQueryDto query)
+        public static string NextPageLink<T>(this Controller controller, string controllerName, string routeName, PageQueryDto<T> query)
         {
             if (controller == null)
             {

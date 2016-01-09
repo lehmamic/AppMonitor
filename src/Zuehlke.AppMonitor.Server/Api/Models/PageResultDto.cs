@@ -1,6 +1,6 @@
 ﻿namespace Zuehlke.AppMonitor.Server.Api.Models
 {
-    public class PagingResultDto<T>
+    public class PageResultDto<T>
     {
         public T[] Items { get; set; }
 

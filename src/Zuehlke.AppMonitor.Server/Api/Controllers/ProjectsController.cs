@@ -26,12 +26,15 @@ namespace Zuehlke.AppMonitor.Server.Api.Controllers
         }
 
         // GET: api/projects
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet(Name = "GetProjectList")]
+        public async Task<IActionResult> Get([FromQuery]PageQueryDto pageQuery)
         {
-            var projects = await this.dataAccess.Projects.GetList(new PagingQuery { Skip = 0, Top = 50 });
+            PageResult<Project> projects = await this.dataAccess.Projects.GetList(Mapper.Map<PagingQuery>(pageQuery.ValueOrDefault()));
 
-            return this.Ok(projects.Items);
+            var results = Mapper.Map<PageResultDto<ProjectDto>>(projects);
+            results.NextPageLink = this.NextPageLink("GetProjectList", "Projects", pageQuery);
+
+            return this.Ok(results);
         }
 
         // GET api/projects/5

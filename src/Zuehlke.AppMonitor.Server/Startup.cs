@@ -46,7 +46,12 @@ namespace Zuehlke.AppMonitor.Server
             loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseAutoMapper(c => c.AddProfile<ProjectProfile>());
+            app.UseAutoMapper(c =>
+            {
+                c.AddProfile<ProjectProfile>();
+                c.AddProfile<PageQueryProfile>();
+                c.AddProfile<PageResultProfile>();
+            });
 
             app.UseIISPlatformHandler();
 

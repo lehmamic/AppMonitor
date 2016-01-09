@@ -2,9 +2,9 @@
 
 namespace Zuehlke.AppMonitor.Server.DataAccess.Entities
 {
-    public class PagingResult<T>
+    public class PageResult<T>
     {
-        public PagingResult(T[] items, long totalCount)
+        public PageResult(T[] items, long totalCount)
         {
             if (items == null)
             {
@@ -16,6 +16,7 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Entities
         }
 
         public T[] Items { get; }
+
 
         public long TotalCount { get; }
     }

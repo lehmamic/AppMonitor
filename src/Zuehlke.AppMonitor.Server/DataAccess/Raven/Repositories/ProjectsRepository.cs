@@ -21,7 +21,7 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
         }
 
         #region Implementation of IRepository<Project>
-        public async Task<PagingResult<Project>> GetList(PagingQuery query)
+        public async Task<PageResult<Project>> GetList(PagingQuery query)
         {
             if (query == null)
             {
@@ -38,7 +38,7 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
                     .Take(query.Top)
                     .ToListAsync();
 
-                return new PagingResult<Project>(projects.ToArray(), stats.TotalResults);
+                return new PageResult<Project>(projects.ToArray(), stats.TotalResults);
             }
         }
 

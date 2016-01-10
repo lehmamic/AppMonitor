@@ -37,9 +37,9 @@ namespace Zuehlke.AppMonitor.Server.Api.Controllers
 
         // GET api/projects/5
         [HttpGet("{id}", Name = "GetProject")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            Project project = await this.dataAccess.Projects.Get(id);
+            Project project = await this.dataAccess.Projects.GetAsync(id);
             if (project == null)
             {
                 return this.HttpNotFound();
@@ -64,19 +64,19 @@ namespace Zuehlke.AppMonitor.Server.Api.Controllers
 
             ProjectDto result = await this.dataAccess.Projects.Create(item);
 
-            return this.CreatedAtRoute("GetProject", new { controller = "Projects", id = result.Name }, result);
+            return this.CreatedAtRoute("GetProject", new { controller = "Projects", id = result.Id }, result);
         }
 
         // PUT api/projects/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody]ProjectDto item)
+        public async Task<IActionResult> Put(Guid id, [FromBody]ProjectDto item)
         {
-            if (item == null || item.Name != id)
+            if (item == null || item.Id != id)
             {
                 return this.HttpBadRequest();
             }
 
-            var project = await this.dataAccess.Projects.Get(id);
+            var project = await this.dataAccess.Projects.GetAsync(id);
             if (project == null)
             {
                 return this.HttpNotFound();
@@ -89,9 +89,9 @@ namespace Zuehlke.AppMonitor.Server.Api.Controllers
 
         // DELETE api/projects/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            await this.dataAccess.Projects.Delete(id);
+            await this.dataAccess.Projects.DeleteAsync(id);
 
             return new NoContentResult();
         }

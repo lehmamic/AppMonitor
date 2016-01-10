@@ -3,25 +3,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Raven.Client;
 using Zuehlke.AppMonitor.Server.DataAccess.Entities;
+using Environment = Zuehlke.AppMonitor.Server.DataAccess.Entities.Environment;
 
 namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
 {
-    public class ProjectsRepository :IRepository<Project, Guid>
+    public class EnvironmentsRepository : IRepository<Environment, Guid>
     {
         private readonly IDocumentStore documentStore;
+        private readonly Project project;
 
-        public ProjectsRepository(IDocumentStore documentStore)
+        public EnvironmentsRepository(IDocumentStore documentStore, Project project)
         {
-            if (documentStore == null)
-            {
-                throw new ArgumentNullException(nameof(documentStore));
-            }
-
             this.documentStore = documentStore;
+            this.project = project;
         }
 
-        #region Implementation of IRepository<Project>
-        public async Task<PageResult<Project>> GetListAsync(PagingQuery<Project> query)
+        public async Task<PageResult<Environment>> GetListAsync(PagingQuery<Environment> query)
         {
             if (query == null)
             {
@@ -32,26 +29,27 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
             {
                 RavenQueryStatistics stats;
 
-                var projects = await session.Query<Project>()
+                var environments = await session.Query<Environment>()
                     .Statistics(out stats)
+                    .Where(p => p.ProjectId == this.project.Id)
                     .OrderBy(p => p.CreatedAtUtc)
                     .Skip(query.Skip)
                     .Take(query.Top)
                     .ToListAsync();
 
-                return new PageResult<Project>(projects.ToArray(), stats.TotalResults);
+                return new PageResult<Environment>(environments.ToArray(), stats.TotalResults);
             }
         }
 
-        public async Task<Project> GetAsync(Guid id)
+        public async Task<Environment> GetAsync(Guid id)
         {
             using (IAsyncDocumentSession session = this.documentStore.OpenAsyncSession())
             {
-                return await session.LoadAsync<Project>(id);
+                return await session.LoadAsync<Environment>(id);
             }
         }
 
-        public async Task<Project> CreateAsync(Project item)
+        public async Task<Environment> CreateAsync(Environment item)
         {
             if (item == null)
             {
@@ -60,6 +58,7 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
 
             using (IAsyncDocumentSession session = this.documentStore.OpenAsyncSession())
             {
+                item.ProjectId = this.project.Id;
                 item.CreatedAtUtc = DateTime.UtcNow;
 
                 await session.StoreAsync(item);
@@ -69,18 +68,18 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
             }
         }
 
-        public async Task UpdateAsync(Guid id, Action<Project> updateItem)
+        public async Task UpdateAsync(Guid id, Action<Environment> updateItem)
         {
             using (IAsyncDocumentSession session = this.documentStore.OpenAsyncSession())
             {
-                var project = await session.LoadAsync<Project>(id);
-                if (project == null)
+                var environment = await session.LoadAsync<Environment>(id);
+                if (environment == null)
                 {
-                    throw new EntityNotFoundException($"The entity of type {typeof(Project)} with the id {id}");
+                    throw new EntityNotFoundException($"The entity of type {typeof(Environment)} with the id {id}");
                 }
 
-                updateItem(project);
-                project.ModifiedAtUtc = DateTime.UtcNow;
+                updateItem(environment);
+                environment.ModifiedAtUtc = DateTime.UtcNow;
 
                 await session.SaveChangesAsync();
             }
@@ -90,16 +89,15 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
         {
             using (IAsyncDocumentSession session = this.documentStore.OpenAsyncSession())
             {
-                var project = await session.LoadAsync<Project>(id);
-                if (project == null)
+                var environment = await session.LoadAsync<Environment>(id);
+                if (environment == null)
                 {
-                    throw new EntityNotFoundException($"The entity of type {typeof(Project)} with the id {id}");
+                    throw new EntityNotFoundException($"The entity of type {typeof(Environment)} with the id {id}");
                 }
 
-                session.Delete(project);
+                session.Delete(environment);
                 await session.SaveChangesAsync();
             }
         }
-        #endregion
     }
 }

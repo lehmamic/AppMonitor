@@ -20,7 +20,7 @@ namespace Zuehlke.AppMonitor.Server.Api.Controllers
             where TEntity : class, IEntity<TId>, new()
             where TDto : class, new()
         {
-            var entity = await repository.Create(dto.ProjectedAs<TEntity>());
+            var entity = await repository.CreateAsync(dto.ProjectedAs<TEntity>());
 
             return entity.ProjectedAs<TDto>();
         }
@@ -29,7 +29,7 @@ namespace Zuehlke.AppMonitor.Server.Api.Controllers
             where TEntity : class, IEntity<TId>, new()
             where TDto : class, new()
         {
-            await repository.Update(id, p => dto.ProjectedTo(p));
+            await repository.UpdateAsync(id, p => dto.ProjectedTo(p));
         }
     }
 }

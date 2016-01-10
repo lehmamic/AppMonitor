@@ -5,6 +5,10 @@ using Raven.Abstractions.Data;
 using Raven.Client;
 using Raven.Client.Document;
 
+#if DNX451
+using Raven.Client.Embedded;
+#endif
+
 namespace Zuehlke.AppMonitor.Server.DataAccess.Raven
 {
     public static class RavenDbDataAccessExtensions
@@ -101,7 +105,7 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven
             parser.Parse();
 
             var options = parser.ConnectionStringOptions;
-            var documentStore = new global::Raven.Client.Embedded.EmbeddableDocumentStore();
+            var documentStore = new EmbeddableDocumentStore();
 
             if (options.ResourceManagerId != Guid.Empty)
             {

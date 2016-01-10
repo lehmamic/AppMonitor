@@ -2,6 +2,7 @@
 using Raven.Client;
 using Zuehlke.AppMonitor.Server.DataAccess.Entities;
 using Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories;
+using Environment = Zuehlke.AppMonitor.Server.DataAccess.Entities.Environment;
 
 namespace Zuehlke.AppMonitor.Server.DataAccess.Raven
 {
@@ -19,10 +20,13 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven
             this.documentStore = documentStore;
 
             this.Projects = new ProjectsRepository(this.documentStore);
+            this.Environments = new RepositoryCollection<Environment, Guid>(this.documentStore, (s, p) => new EnvironmentsRepository(s, p));
         }
 
         #region Implementation of IDataAccess
-        public IRepository<Project, string> Projects { get; }
+        public IRepository<Project, Guid> Projects { get; }
+
+        public IRepositoryCollection<Environment, Guid> Environments { get; }
         #endregion
     }
 }

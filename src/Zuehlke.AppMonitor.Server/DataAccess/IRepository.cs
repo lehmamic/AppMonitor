@@ -8,12 +8,12 @@ namespace Zuehlke.AppMonitor.Server.DataAccess
     {
         Task<PageResult<TEntity>> GetListAsync(PagingQuery<TEntity> query);
 
-        Task<TEntity> Get(TId id);
+        Task<TEntity> GetAsync(TId id);
 
-        Task<TEntity> Create(TEntity project);
+        Task<TEntity> CreateAsync(TEntity item);
 
-        Task Update(TId id, Action<TEntity> project);
+        Task UpdateAsync(TId id, Action<TEntity> updateItem);
 
-        Task Delete(TId id);
+        Task DeleteAsync(TId id);
     }
 }

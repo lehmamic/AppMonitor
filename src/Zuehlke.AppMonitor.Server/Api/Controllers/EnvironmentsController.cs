@@ -1,46 +1,134 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
+using Zuehlke.AppMonitor.Server.Api.Models;
+using Zuehlke.AppMonitor.Server.DataAccess;
+using Zuehlke.AppMonitor.Server.Utils.Projection;
+using Environment = Zuehlke.AppMonitor.Server.DataAccess.Entities.Environment;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Zuehlke.AppMonitor.Server.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/projects/{project}/[controller]")]
     public class EnvironmentsController : Controller
     {
-        // GET: api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IDataAccess dataAccess;
+
+        public EnvironmentsController(IDataAccess dataAccess)
         {
-            return new string[] { "value1", "value2" };
+            if (dataAccess == null)
+            {
+                throw new ArgumentNullException(nameof(dataAccess));
+            }
+
+            this.dataAccess = dataAccess;
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET: api/projects/{project}/environments?skip=0&top=50
+        [HttpGet(Name = "GetEnvironmentList")]
+        public async Task<IActionResult> Get([FromRoute]Guid project, [FromQuery]PageQueryDto<ProjectDto> pageQuery)
         {
-            return "value";
+            IRepository<Environment, Guid> repository = await this.dataAccess.Environments.GetAsync(project);
+            if (repository == null)
+            {
+                return this.HttpNotFound(project);
+            }
+
+            PageResultDto<ProjectDto> result = await this.dataAccess.Projects.GetListAsync(pageQuery);
+            result.NextPageLink = this.NextPageLink("GetEnvironmentList", "Environments", pageQuery);
+
+            return this.Ok(result);
         }
 
-        // POST api/values
+        // GET api/projects/{project}/environments/5
+        [HttpGet("{id}", Name = "GetEnvironment")]
+        public async Task<IActionResult> Get([FromRoute]Guid project, Guid id)
+        {
+            IRepository<Environment, Guid> repository = await this.dataAccess.Environments.GetAsync(project);
+            if (repository == null)
+            {
+                return this.HttpNotFound(project);
+            }
+
+            var environment = await repository.GetAsync(id);
+            if (environment == null)
+            {
+                return this.HttpNotFound();
+            }
+
+            return this.Ok(environment.ProjectedAs<EnvironmentDto>());
+        }
+
+        // POST api/projects/{project}/environments/
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<IActionResult> Post([FromRoute]Guid project, [FromBody]EnvironmentDto item)
         {
+            if (item == null)
+            {
+                return this.HttpBadRequest();
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.HttpBadRequest();
+            }
+
+            IRepository<Environment, Guid> repository = await this.dataAccess.Environments.GetAsync(project);
+            if (repository == null)
+            {
+                return this.HttpNotFound(project);
+            }
+
+            EnvironmentDto result = await repository.Create(item);
+
+            return this.CreatedAtRoute("GetEnvironment", new { controller = "Environments", id = result.Id }, result);
         }
 
-        // PUT api/values/5
+        // PUT api/projects/{project}/environments/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<IActionResult> Put([FromRoute]Guid project, Guid id, [FromBody]EnvironmentDto item)
         {
+            if (item == null || item.Id != id)
+            {
+                return this.HttpBadRequest();
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.HttpBadRequest();
+            }
+
+            IRepository<Environment, Guid> repository = await this.dataAccess.Environments.GetAsync(project);
+            if (repository == null)
+            {
+                return this.HttpNotFound(project);
+            }
+
+            Environment environment = await repository.GetAsync(id);
+            if (environment == null)
+            {
+                return this.HttpNotFound();
+            }
+
+            await repository.Update(id, item);
+
+            return new NoContentResult();
         }
 
-        // DELETE api/values/5
+        // DELETE api/projects/{project}/environments/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute]Guid project, Guid id)
         {
+            IRepository<Environment, Guid> repository = await this.dataAccess.Environments.GetAsync(project);
+            if (repository == null)
+            {
+                return this.HttpNotFound(project);
+            }
+
+            await repository.DeleteAsync(id);
+
+            return new NoContentResult();
         }
     }
 }

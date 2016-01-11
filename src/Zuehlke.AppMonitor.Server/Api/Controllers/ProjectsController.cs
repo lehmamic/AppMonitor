@@ -30,7 +30,7 @@ namespace Zuehlke.AppMonitor.Server.Api.Controllers
         public async Task<IActionResult> Get([FromQuery]PageQueryDto<ProjectDto> pageQuery)
         {
             PageResultDto<ProjectDto> result = await this.dataAccess.Projects.GetListAsync(pageQuery);
-            result.NextPageLink = this.NextPageLink("GetProjectList", "Projects", pageQuery);
+            result.NextPageLink = this.NextPageLink("Projects", "GetProjectList", pageQuery);
 
             return this.Ok(result);
         }

@@ -27,7 +27,7 @@ namespace Zuehlke.AppMonitor.Server.Api.Controllers
 
         // GET: api/projects/{project}/environments?skip=0&top=50
         [HttpGet(Name = "GetEnvironmentList")]
-        public async Task<IActionResult> Get([FromRoute]Guid project, [FromQuery]PageQueryDto<ProjectDto> pageQuery)
+        public async Task<IActionResult> Get([FromRoute]Guid project, [FromQuery]PageQueryDto<EnvironmentDto> pageQuery)
         {
             IRepository<Environment, Guid> repository = await this.dataAccess.Environments.GetAsync(project);
             if (repository == null)
@@ -35,8 +35,8 @@ namespace Zuehlke.AppMonitor.Server.Api.Controllers
                 return this.HttpNotFound(project);
             }
 
-            PageResultDto<ProjectDto> result = await this.dataAccess.Projects.GetListAsync(pageQuery);
-            result.NextPageLink = this.NextPageLink("GetEnvironmentList", "Environments", pageQuery);
+            PageResultDto<EnvironmentDto> result = await repository.GetListAsync(pageQuery);
+            result.NextPageLink = this.NextPageLink("Environments", "GetEnvironmentList", pageQuery);
 
             return this.Ok(result);
         }

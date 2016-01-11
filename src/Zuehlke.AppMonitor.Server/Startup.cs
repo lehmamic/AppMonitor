@@ -51,6 +51,7 @@ namespace Zuehlke.AppMonitor.Server
                 c.AddProfile<ProjectProfile>();
                 c.AddProfile<PageQueryProfile>();
                 c.AddProfile<PageResultProfile>();
+                c.AddProfile<EnvironmentProfile>();
             });
 
             app.UseIISPlatformHandler();

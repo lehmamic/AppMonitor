@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Raven.Client;
 using Zuehlke.AppMonitor.Server.DataAccess.Entities;
+using Zuehlke.AppMonitor.Server.DataAccess.Raven.Indeces;
 using Environment = Zuehlke.AppMonitor.Server.DataAccess.Entities.Environment;
 
 namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
@@ -29,7 +30,7 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
             {
                 RavenQueryStatistics stats;
 
-                var environments = await session.Query<Environment>()
+                var environments = await session.Query<Environment, Environments_ByProjectIdAndCreatedAtUtc>()
                     .Statistics(out stats)
                     .Where(p => p.ProjectId == this.project.Id)
                     .OrderBy(p => p.CreatedAtUtc)

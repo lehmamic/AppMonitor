@@ -4,7 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Raven.Abstractions.Data;
 using Raven.Client;
 using Raven.Client.Document;
-
+using Raven.Client.Indexes;
+using Zuehlke.AppMonitor.Server.DataAccess.Raven.Indeces;
 #if DNX451
 using Raven.Client.Embedded;
 #endif
@@ -49,6 +50,9 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven
 #endif
 
             documentStore.Initialize();
+
+            documentStore.ExecuteIndex(new Projects_ByCreatedAtUtc());
+            documentStore.ExecuteIndex(new Environments_ByProjectIdAndCreatedAtUtc());
 
             return documentStore;
         }

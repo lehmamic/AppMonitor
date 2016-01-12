@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Raven.Client;
 using Zuehlke.AppMonitor.Server.DataAccess.Entities;
+using Zuehlke.AppMonitor.Server.DataAccess.Raven.Indeces;
 
 namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
 {
@@ -32,7 +33,7 @@ namespace Zuehlke.AppMonitor.Server.DataAccess.Raven.Repositories
             {
                 RavenQueryStatistics stats;
 
-                var projects = await session.Query<Project>()
+                var projects = await session.Query<Project, Projects_ByCreatedAtUtc>()
                     .Statistics(out stats)
                     .OrderBy(p => p.CreatedAtUtc)
                     .Skip(query.Skip)

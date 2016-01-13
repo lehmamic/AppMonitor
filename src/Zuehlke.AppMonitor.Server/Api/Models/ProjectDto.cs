@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Zuehlke.AppMonitor.Server.Api.Models
 {
-    public class ProjectDto
+    public class ProjectDto : IDataTransferObject<Guid>
     {
         public Guid Id { get; set; }
 
